@@ -17,21 +17,30 @@ function Entries(){
     return(
         <>
         <h1>Journals</h1>
-        <ul className="entry-list">
-            <li className="entry-header">S.No</li>
-            <li className="entry-header">Title</li>
-            <li className="entry-header">Description</li>
         
-            {
+            <table className="entry-list" border="1">
+                <thead>
+                    <th className="entry-header">S.No</th>
+                    <th className="entry-header">Date</th>
+                    <th className="entry-header">Title</th>
+                    <th className="entry-header">Description</th>
+                </thead>
+                <tbody>
+                    {
                 taskData && taskData.map((item,index)=>(
-                    <>
-                        <li className="entry-item">{index+1}</li>
-                        <li className="entry-item">{item.title}</li>
-                        <li className="entry-item">{item.description}</li>
-                   </>
+                    <tr>
+                        <td className="entry-item">{index+1}</td>
+                        <td className="entry-item">{item.date}</td>
+                        <td className="entry-item">{item.title}</td>
+                        <td className="entry-item">{item.description}</td>
+                   </tr>
                 ))
             }
-    </ul>
+                </tbody>
+        
+            
+            </table>
+    
         </>
     )
 }

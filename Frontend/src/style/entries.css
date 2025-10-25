@@ -1,3 +1,19 @@
+h1{
+    display: flex;
+    justify-content: center;
+    margin: 10px 10px;
+    font-weight: bold;
+    font-size: 60px;
+}
 .entry-list{
     
+    min-height: 300px;
+    min-width: 400px;
+    background-color: rgb(215, 220, 220);
+    margin: auto;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.8);
+    list-style: none;
+}
+.entry-header,.entry-item{
+    padding: 10px 10px;
 }
