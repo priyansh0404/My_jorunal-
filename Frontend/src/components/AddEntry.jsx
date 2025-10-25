@@ -2,8 +2,20 @@ import { useState } from "react";
 import "../style/AddEntry.css";
 export default function AddEntry() {
     const [taskData,setTaskData] = useState();
-    const handleAddTask = () =>{
+    const handleAddTask = async() =>{
         console.log(taskData);
+        let result = await fetch("http://localhost:3200/add-entry",{
+            method:"Post",
+            body:JSON.stringify(taskData),
+            headers:{
+                'Content-Type':'Application/Json'
+            } 
+        })
+        result = await result.json();
+        if(result){
+            console.log("New entry added");
+         
+        }
     }
   return (
     <div className="box">
