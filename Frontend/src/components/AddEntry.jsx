@@ -1,7 +1,10 @@
 import { useState } from "react";
+
 import "../style/AddEntry.css";
+import { Navigate, useNavigate } from "react-router-dom";
 export default function AddEntry() {
     const [taskData,setTaskData] = useState();
+    const navigate = useNavigate();
     const handleAddTask = async() =>{
         console.log(taskData);
         let result = await fetch("http://localhost:3200/add-entry",{
@@ -13,8 +16,8 @@ export default function AddEntry() {
         })
         result = await result.json();
         if(result){
-            console.log("New entry added");
-         
+          alert("New data successfully added");
+          navigate("/");
         }
     }
   return (

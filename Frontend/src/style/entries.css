@@ -17,3 +17,26 @@ h1{
 .entry-header,.entry-item{
     padding: 10px 10px;
 }
+.delete-btn{
+    padding: 10px 10px;
+    background-color: red;
+    color: white;
+}
+.delete-btn:hover{
+    background-color: rgb(239, 43, 43);
+}
+.update-btn{
+    margin-left: 5px;
+    padding: 10px 10px;
+    background-color: green;
+    text-decoration: none;
+    color: white;
+    border-radius: 12px;
+}
+.update-btn:hover{
+    background-color: rgb(50, 163, 50);
+}
+
+
+
+

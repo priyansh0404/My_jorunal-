@@ -16,7 +16,7 @@ Features:
 
 Tech Stack:
 
-Frontend: React.js, Tailwind CSS
+Frontend: React.js 
 
 Backend: Node.js, Express.js
 

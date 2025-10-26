@@ -6,7 +6,7 @@ export default function NavBar(){
             <nav className="navbar">
                 <div className="logo">My Journal</div>
                 <ul className="nav-links">
-                    <li><Link className="navl" to="/entries">Journal Diary</Link></li>
+                    <li><Link className="navl" to="/">Journal Diary</Link></li>
                     <li><Link className="navl" to="/add-entry">Add new</Link></li>
                 </ul>
             </nav>

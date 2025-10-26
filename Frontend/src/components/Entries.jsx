@@ -1,47 +1,61 @@
 import { useEffect, useState } from "react";
-import "../style/entries.css"
+import "../style/entries.css";
+import { Link } from "react-router-dom";
 
-function Entries(){
-    const [taskData,setTaskData] = useState([]);
-    useEffect(()=>{
-        getListData();
-    },[])
+function Entries() {
+  const [taskData, setTaskData] = useState([]);
+  useEffect(() => {
+    getListData();
+  }, []);
 
-    const getListData = async() =>{
-        let list = await fetch("http://localhost:3200/entries");
-        const data = await list.json();
-        if(data.success){
-            setTaskData(data.result)
-        }
+  const getListData = async () => {
+    let list = await fetch("http://localhost:3200/entries");
+    const data = await list.json();
+    if (data.success) {
+      setTaskData(data.result);
     }
-    return(
-        <>
-        <h1>Journals</h1>
-        
-            <table className="entry-list" border="1">
-                <thead>
-                    <th className="entry-header">S.No</th>
-                    <th className="entry-header">Date</th>
-                    <th className="entry-header">Title</th>
-                    <th className="entry-header">Description</th>
-                </thead>
-                <tbody>
-                    {
-                taskData && taskData.map((item,index)=>(
-                    <tr>
-                        <td className="entry-item">{index+1}</td>
-                        <td className="entry-item">{item.date}</td>
-                        <td className="entry-item">{item.title}</td>
-                        <td className="entry-item">{item.description}</td>
-                   </tr>
-                ))
-            }
-                </tbody>
-        
-            
-            </table>
-    
-        </>
-    )
+  };
+
+  const deleteTask = async(id) => {
+    let data = await fetch("http://localhost:3200/delete/" +id ,{method:'delete'});
+    data = await data.json();
+    if(data.success){
+        alert("Data successfully deleted");
+        getListData();
+    }
+  }
+
+  return (
+    <>
+      <h1>Journals</h1>
+
+      <table className="entry-list" border="3">
+        <thead>
+          <tr>
+            <th className="entry-header">S.No</th>
+            <th className="entry-header">Date</th>
+            <th className="entry-header">Title</th>
+            <th className="entry-header">Description</th>
+            <th className="entry-header">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {taskData &&
+            taskData.map((item, index) => (
+              <tr key={item._id}>
+                <td className="entry-item">{index + 1}</td>
+                <td className="entry-item">{item.date}</td>
+                <td className="entry-item">{item.title}</td>
+                <td className="entry-item">{item.description}</td>
+                <td className="entry-item">
+                  <button className="delete-btn"onClick={() => deleteTask(item._id)}>Delete</button>
+                  <Link className="update-btn" to={"/update/"+item._id}>Update</Link>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </>
+  );
 }
 export default Entries;
