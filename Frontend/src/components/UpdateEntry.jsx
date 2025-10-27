@@ -28,7 +28,7 @@ export default function UpdateEntry() {
             setTaskData({ ...taskData, title: event.target.value })
           }
           className="input"
-          type="text"
+          type="text"  
           placeholder="Enter Title"
           name="title"
           value={taskData?.title}
