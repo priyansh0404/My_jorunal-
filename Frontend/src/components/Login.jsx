@@ -3,6 +3,21 @@ import "../style/login.css";
 import { NavLink } from "react-router-dom";
 export default function Login() {
     const[userData,setUserData] = useState();
+    const handleLogin = async () => {
+    console.log(userData);
+    let result = await fetch("http://localhost:3200/login", {
+      method: "Post",
+      body: JSON.stringify(userData),
+      headers: {
+        "Content-Type": "Application/Json",
+      },
+    });
+    result = await result.json();
+    if (result.success) {
+      console.log(result);
+      document.cookie = "token = " + result.token;
+    }
+  };
   return (
     <>
       <div className="logincontainer">
@@ -25,7 +40,7 @@ export default function Login() {
           placeholder="Enter your password"
           name="password"
         />
-        <button onClick={()=>console.log(userData)}>Login</button>
+        <button onClick={handleLogin}>Login</button>
         <NavLink to="/signup">Signup</NavLink>
       </div>
     </>

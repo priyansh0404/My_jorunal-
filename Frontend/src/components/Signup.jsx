@@ -4,6 +4,21 @@ import { NavLink } from "react-router-dom";
 
 export default function Signup() {
   const [userData, setUserData] = useState([]);
+  const handleSignup = async () => {
+    console.log(userData);
+    let result = await fetch("http://localhost:3200/signup", {
+      method: "Post",
+      body: JSON.stringify(userData),
+      headers: {
+        "Content-Type": "Application/Json",
+      },
+    });
+    result = await result.json();
+    if (result.success) {
+      console.log(result);
+      document.cookie = "token = " + result.token;
+    }
+  };
 
   return (
     <>
@@ -36,7 +51,7 @@ export default function Signup() {
           placeholder="Enter your password"
           name="password"
         />
-        <button onClick={()=>console.log(userData)}>Signup</button>
+        <button onClick={handleSignup}>Signup</button>
         <NavLink to="/login">Login</NavLink>
       </div>
     </>

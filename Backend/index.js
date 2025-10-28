@@ -1,86 +1,134 @@
-import express from 'express';
-import {connection,collectionName} from "./dbconfig.js"
-import cors from 'cors'
-import { ObjectId } from 'mongodb';
+import express from "express";
+import { connection, collectionName } from "./dbconfig.js";
+import cors from "cors";
+import { ObjectId } from "mongodb";
+import jwt from "jsonwebtoken";
 const app = express();
 app.use(cors());
 
 app.use(express.json());
-app.post("/add-entry",async(req,resp)=>{
-    const db = await connection();
-    const collection =await db.collection(collectionName);
-    const result = await collection.insertOne(req.body);
-    console.log(result);
-    if(result){
-        resp.status(200).json({ "success": true, "id": result.insertedId });
-        
-    }
-    else{
-        resp.status(500).json({"success":false});
-    }
-})
+app.post("/add-entry", async (req, resp) => {
+  const db = await connection();
+  const collection = await db.collection(collectionName);
+  const result = await collection.insertOne(req.body);
+  console.log(result);
+  if (result) {
+    resp.status(200).json({ success: true, id: result.insertedId });
+  } else {
+    resp.status(500).json({ success: false });
+  }
+});
 
-app.get("/entries",async(req,resp)=>{
-    const db = await connection();
-    const collection =await db.collection(collectionName);
-    const result = await collection.find().toArray();
-    console.log(result);
-    if(result){
-        resp.status(200).json({ "success": true ,"result":result });
-        
-    }
-    else{
-        resp.status(500).json({success:false});
-    }
-})
-app.delete("/delete/:id", async(req,resp)=>{
-    const db = await connection();
-    const id = req.params.id;
-    const collection = await db.collection(collectionName);
-    const result = await collection.deleteOne({_id:new ObjectId(id)});
-    if(result){
-        resp.status(200).json({ "success": true ,"result":result , "message":"Task deleted" });
-        
-    }
-    else{
-        resp.status(500).json({success:false,"message":"Task not deleted"});
-    }
-})
+app.get("/entries", async (req, resp) => {
+  const db = await connection();
+  const collection = await db.collection(collectionName);
+  const result = await collection.find().toArray();
+  console.log(result);
+  if (result) {
+    resp.status(200).json({ success: true, result: result });
+  } else {
+    resp.status(500).json({ success: false });
+  }
+});
+app.delete("/delete/:id", async (req, resp) => {
+  const db = await connection();
+  const id = req.params.id;
+  const collection = await db.collection(collectionName);
+  const result = await collection.deleteOne({ _id: new ObjectId(id) });
+  if (result) {
+    resp
+      .status(200)
+      .json({ success: true, result: result, message: "Task deleted" });
+  } else {
+    resp.status(500).json({ success: false, message: "Task not deleted" });
+  }
+});
 
-app.get("/entry/:id",async(req,resp)=>{
-    const id = req.params.id;
-    const db = await connection();
-    const collection =await db.collection(collectionName);
-    const result = await collection.findOne({_id:new ObjectId(id)});
-    console.log(result);
-    if(result){
-        resp.status(200).json({ "success": true ,"result":result });
-        
-    }
-    else{
-        resp.status(500).json({success:false});
-    }
-})
+app.get("/entry/:id", async (req, resp) => {
+  const id = req.params.id;
+  const db = await connection();
+  const collection = await db.collection(collectionName);
+  const result = await collection.findOne({ _id: new ObjectId(id) });
+  console.log(result);
+  if (result) {
+    resp.status(200).json({ success: true, result: result });
+  } else {
+    resp.status(500).json({ success: false });
+  }
+});
 
-app.put("/update-entry",async(req,resp)=>{
-    const db = await connection();
-    const collection =await db.collection(collectionName);
-    const {_id,...fields} = req.body;
-    const update = {$set:fields};
-    const result = await collection.updateOne({_id : new ObjectId(_id)},update);
-    if(result){
-        resp.status(200).json({ "success": true ,"message":"Entry updated" });
-        
-    }
-    else{
-        resp.status(500).json({success:false});
-    }
-})
+app.put("/update-entry", async (req, resp) => {
+  const db = await connection();
+  const collection = await db.collection(collectionName);
+  const { _id, ...fields } = req.body;
+  const update = { $set: fields };
+  const result = await collection.updateOne({ _id: new ObjectId(_id) }, update);
+  if (result) {
+    resp.status(200).json({ success: true, message: "Entry updated" });
+  } else {
+    resp.status(500).json({ success: false });
+  }
+});
 
-app.get("/",(req,resp)=>{
+app.post("/signup", async (req, resp) => {
+  const userData = req.body;
+  if (userData.name && userData.email && userData.password) {
+    const db = await connection();
+    const collection = db.collection("users");
+    const result = await collection.insertOne(userData);
+    if (result) {
+      jwt.sign(userData, "Google", { expiresIn: "5d" }, (error, token) => {
+        resp.send({
+          success: true,
+          msg: "User signedup",
+          token,
+        });
+      });
+    }
+  } else {
     resp.send({
-        message:"Welcome to Api",
-        success:true,
-    })
-})
+      success: false,
+      msg: "Signup failed",
+    });
+  }
+});
+
+app.post("/login", async (req, resp) => {
+  const userData = req.body;
+  if (userData.email && userData.password) {
+    const db = await connection();
+    const collection = db.collection("users");
+    const result = await collection.findOne({
+      email: userData.email,
+      password: userData.password,
+    });
+    if (result) {
+      jwt.sign(userData, "Google", { expiresIn: "5d" }, (error, token) => {
+        resp.send({
+          success: true,
+          msg: "User login",
+          token,
+        });
+      });
+    }
+    else{
+        resp.send({
+      success: false,
+      msg: "user not found",
+    });
+    }
+  } else {
+    resp.send({
+      success: false,
+      msg: "Login failed",
+    });
+  }
+});
+
+app.get("/", (req, resp) => {
+  resp.send({
+    message: "Welcome to Api",
+    success: true,
+  });
+});
 app.listen(3200);
