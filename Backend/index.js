@@ -62,6 +62,21 @@ app.get("/entry/:id",async(req,resp)=>{
     }
 })
 
+app.put("/update-entry",async(req,resp)=>{
+    const db = await connection();
+    const collection =await db.collection(collectionName);
+    const {_id,...fields} = req.body;
+    const update = {$set:fields};
+    const result = await collection.updateOne({_id : new ObjectId(_id)},update);
+    if(result){
+        resp.status(200).json({ "success": true ,"message":"Entry updated" });
+        
+    }
+    else{
+        resp.status(500).json({success:false});
+    }
+})
+
 app.get("/",(req,resp)=>{
     resp.send({
         message:"Welcome to Api",

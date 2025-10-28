@@ -13,14 +13,14 @@ h1{
     margin-bottom: 30px;
     font-weight: bold;
 }
-.container{
+.add-container{
     padding: 30px 15px;
     margin: auto;
-    height: 400px;
-    width: 400px;
+    height: 450px;
+    width: 500px;
     flex-direction: column;
     display: flex;
-    gap: 20px;
+    gap: 30px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.9);
     border-radius: 12px;
 }
@@ -38,7 +38,7 @@ h1{
     resize: vertical;
 }
 button{
-    
+    margin-top: 15px;
     padding: 10px 10px;
     background-color: rgb(61, 35, 35);
     color: white;

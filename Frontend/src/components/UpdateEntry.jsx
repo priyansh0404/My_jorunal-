@@ -1,27 +1,41 @@
 import { useEffect } from "react";
+import "../style/addentry.css"
 import { useState } from "react";
-import { data, useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 export default function UpdateEntry() {
   const [taskData, setTaskData] = useState();
   const navigate = useNavigate();
   const {id} = useParams();
 
   useEffect(()=>{
-    updateTask(id);
+    fetchEntry(id);
   },[]);
-  const updateTask = async (id) => {
+  const fetchEntry = async (id) => {
     let data = await fetch("http://localhost:3200/entry/"+id);
     data = await data.json();
     if(data.result){
-        setTaskData(data.result);
-       
+        setTaskData(data.result);     
     }
-    
   };
+
+  const UpdateEntry = async()=>{
+    let entry = await fetch("http://localhost:3200/update-entry",{
+      method:'PUT',
+      body:JSON.stringify(taskData),
+      headers:{
+        'Content-Type' : 'application/json'
+      }
+    });
+    entry = await entry.json();
+    if(entry.success){
+      navigate("/");
+    }
+  }
+
   return (
     <div className="box">
       <h1>Update Entry</h1>
-      <div className="container">
+      <div className="add-container">
         <label htmlFor="">Title</label>
         <input
           onChange={(event) =>
@@ -43,7 +57,7 @@ export default function UpdateEntry() {
           name="description"
           value={taskData?.description}
         ></textarea>
-        <button onClick={() => updateTask()}>Update Entry</button>
+        <button onClick={UpdateEntry}>Update Entry</button>
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ export default function AddEntry() {
   return (
     <div className="box">
       <h1>Add Entry</h1>
-        <div className="container">
+        <div className="add-container">
           <input onChange={(event) => setTaskData({...taskData,date:event.target.value})} className="date" type="date" />
           <label htmlFor="">Title</label>
           <input onChange={(event) => setTaskData({...taskData,title:event.target.value})} className="input" type="text" placeholder="Enter Title" name="title" />

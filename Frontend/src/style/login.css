@@ -1,0 +1,23 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.logincontainer{
+    padding: 30px 15px;
+    margin: auto;
+    min-height: 500px;
+    width: 500px;
+    flex-direction: column;
+    display: flex;
+    gap: 30px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.9);
+    border-radius: 12px;
+    margin-top: 30px;
+}
+input{
+    height: 30px;
+    padding: 12px;
+    border-radius: 15px;
+}
