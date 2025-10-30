@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from "react"; 
 import "../style/addentry.css"
 import { useState } from "react";
 import {useNavigate, useParams } from "react-router-dom";
@@ -11,8 +11,12 @@ export default function UpdateEntry() {
     fetchEntry(id);
   },[]);
   const fetchEntry = async (id) => {
-    let data = await fetch("http://localhost:3200/entry/"+id);
+    let data = await fetch("http://localhost:3200/entry/"+id,{
+      credentials:'include', 
+    });
+     
     data = await data.json();
+    
     if(data.result){
         setTaskData(data.result);     
     }
@@ -22,9 +26,11 @@ export default function UpdateEntry() {
     let entry = await fetch("http://localhost:3200/update-entry",{
       method:'PUT',
       body:JSON.stringify(taskData),
+      credentials:'include',
       headers:{
         'Content-Type' : 'application/json'
-      }
+      },
+      
     });
     entry = await entry.json();
     if(entry.success){

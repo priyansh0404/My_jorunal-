@@ -49,7 +49,7 @@ app.delete("/delete/:id",verifyJWTToken, async (req, resp) => {
   } else {
     resp.status(500).json({ success: false, message: "Task not deleted" });
   }
-});
+}); 
 
 app.get("/entry/:id",verifyJWTToken, async (req, resp) => {
   const id = req.params.id;

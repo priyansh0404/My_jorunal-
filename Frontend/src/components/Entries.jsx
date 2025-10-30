@@ -28,9 +28,6 @@ function Entries() {
         alert("Data successfully deleted");
         getListData();
     }
-    else{
-      alert("Try after sometime");
-    }
   }
 
   return (
@@ -55,7 +52,7 @@ function Entries() {
                 <td className="entry-item">{item.date}</td>
                 <td className="entry-item">{item.title}</td>
                 <td className="entry-item">{item.description}</td>
-                <td className="entry-item">
+                <td className="entry">
                   <button className="delete-btn"onClick={() => deleteTask(item._id)}>Delete</button>
                   <Link className="update-btn" to={"/update/"+item._id}>Update</Link>
                 </td>
