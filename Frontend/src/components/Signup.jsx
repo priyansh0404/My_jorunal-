@@ -1,9 +1,16 @@
 import { useState } from "react";
 import "../style/signup.css";
-import { NavLink } from "react-router-dom";
+import { useNavigate,NavLink } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Signup() {
   const [userData, setUserData] = useState([]);
+  const navigate = useNavigate();
+  useEffect(()=>{
+        if(localStorage.getItem('login')){
+          navigate("/")
+        }
+      })
   const handleSignup = async () => {
     console.log(userData);
     let result = await fetch("http://localhost:3200/signup", {
@@ -17,6 +24,11 @@ export default function Signup() {
     if (result.success) {
       console.log(result);
       document.cookie = "token = " + result.token;
+      localStorage.setItem('login',userData.email);
+      navigate('/');
+    }
+    else{
+      alert("Try after sometime");
     }
   };
 
