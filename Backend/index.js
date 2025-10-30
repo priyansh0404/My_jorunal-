@@ -11,7 +11,7 @@ app.use(cors({
 }));
 app.use(cookieParser());
 app.use(express.json());
-app.post("/add-entry", async (req, resp) => {
+app.post("/add-entry",verifyJWTToken, async (req, resp) => {
   const db = await connection();
   const collection = await db.collection(collectionName);
   const result = await collection.insertOne(req.body);
@@ -36,22 +36,8 @@ app.get("/entries",verifyJWTToken, async (req, resp) => {
   }
 });
 
-function verifyJWTToken(req,resp,next){
-  console.log("verify jwt token",req.cookies['token']);
-  const token = req.cookies['token'] ;
-  jwt.verify(token , 'Google' ,(err,decoded)=>{
-    if(err){
-      return resp.send({
-        msg:"invalid token",
-        success : false,
-      });
-    }
-    console.log(decoded);
-    next()
-   
-  })
-}
-app.delete("/delete/:id", async (req, resp) => {
+
+app.delete("/delete/:id",verifyJWTToken, async (req, resp) => {
   const db = await connection();
   const id = req.params.id;
   const collection = await db.collection(collectionName);
@@ -65,7 +51,7 @@ app.delete("/delete/:id", async (req, resp) => {
   }
 });
 
-app.get("/entry/:id", async (req, resp) => {
+app.get("/entry/:id",verifyJWTToken, async (req, resp) => {
   const id = req.params.id;
   const db = await connection();
   const collection = await db.collection(collectionName);
@@ -78,7 +64,7 @@ app.get("/entry/:id", async (req, resp) => {
   }
 });
 
-app.put("/update-entry", async (req, resp) => {
+app.put("/update-entry",verifyJWTToken, async (req, resp) => {
   const db = await connection();
   const collection = await db.collection(collectionName);
   const { _id, ...fields } = req.body;
@@ -152,4 +138,20 @@ app.get("/", (req, resp) => {
     success: true,
   });
 });
+
+function verifyJWTToken(req,resp,next){
+  console.log("verify jwt token",req.cookies['token']);
+  const token = req.cookies['token'] ;
+  jwt.verify(token , 'Google' ,(err,decoded)=>{
+    if(err){
+      return resp.send({
+        msg:"invalid token",
+        success : false,
+      });
+    }
+    console.log(decoded);
+    next()
+   
+  })
+}
 app.listen(3200);

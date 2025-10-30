@@ -9,15 +9,19 @@ export default function AddEntry() {
         console.log(taskData);
         let result = await fetch("http://localhost:3200/add-entry",{
             method:"Post",
+            credentials:"include",
             body:JSON.stringify(taskData),
             headers:{
                 'Content-Type':'Application/Json'
             } 
         })
         result = await result.json();
-        if(result){
+        if(result.success){
           alert("New data successfully added");
           navigate("/");
+        }
+        else{
+          alert("Try after some time");
         }
     }
   return (

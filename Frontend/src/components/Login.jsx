@@ -23,6 +23,7 @@ export default function Login() {
     if (result.success) {
       document.cookie = "token = " + result.token;
       localStorage.setItem('login',userData.email);
+      window.dispatchEvent(new Event('localStorage-event'));
       navigate('/');
     }
     else{

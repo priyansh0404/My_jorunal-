@@ -16,14 +16,20 @@ function Entries() {
     if (data.success) {
       setTaskData(data.result);
     }
+    else{
+      alert("Try after sometime");
+    }
   };
 
   const deleteTask = async(id) => {
-    let data = await fetch("http://localhost:3200/delete/" +id ,{method:'delete'});
+    let data = await fetch("http://localhost:3200/delete/" +id ,{method:'delete',credentials:"include"});
     data = await data.json();
     if(data.success){
         alert("Data successfully deleted");
         getListData();
+    }
+    else{
+      alert("Try after sometime");
     }
   }
 
