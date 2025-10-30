@@ -3,15 +3,19 @@ import { connection, collectionName } from "./dbconfig.js";
 import cors from "cors";
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser"
 const app = express();
-app.use(cors());
-
+app.use(cors({
+    origin:'http://localhost:5173',
+    credentials:true
+}));
+app.use(cookieParser());
 app.use(express.json());
 app.post("/add-entry", async (req, resp) => {
   const db = await connection();
   const collection = await db.collection(collectionName);
   const result = await collection.insertOne(req.body);
-  console.log(result);
+  
   if (result) {
     resp.status(200).json({ success: true, id: result.insertedId });
   } else {
@@ -19,17 +23,34 @@ app.post("/add-entry", async (req, resp) => {
   }
 });
 
-app.get("/entries", async (req, resp) => {
+app.get("/entries",verifyJWTToken, async (req, resp) => {
   const db = await connection();
+  // console.log("cookie test",req.cookies['token']);
   const collection = await db.collection(collectionName);
   const result = await collection.find().toArray();
-  console.log(result);
+  
   if (result) {
     resp.status(200).json({ success: true, result: result });
   } else {
     resp.status(500).json({ success: false });
   }
 });
+
+function verifyJWTToken(req,resp,next){
+  console.log("verify jwt token",req.cookies['token']);
+  const token = req.cookies['token'] ;
+  jwt.verify(token , 'Google' ,(err,decoded)=>{
+    if(err){
+      return resp.send({
+        msg:"invalid token",
+        success : false,
+      });
+    }
+    console.log(decoded);
+    next()
+   
+  })
+}
 app.delete("/delete/:id", async (req, resp) => {
   const db = await connection();
   const id = req.params.id;
@@ -49,7 +70,7 @@ app.get("/entry/:id", async (req, resp) => {
   const db = await connection();
   const collection = await db.collection(collectionName);
   const result = await collection.findOne({ _id: new ObjectId(id) });
-  console.log(result);
+  
   if (result) {
     resp.status(200).json({ success: true, result: result });
   } else {

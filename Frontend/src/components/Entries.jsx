@@ -9,7 +9,9 @@ function Entries() {
   }, []);
 
   const getListData = async () => {
-    let list = await fetch("http://localhost:3200/entries");
+    let list = await fetch("http://localhost:3200/entries",{
+      credentials:"include"  //isse backend me cookies store hojayega
+    });
     const data = await list.json();
     if (data.success) {
       setTaskData(data.result);
